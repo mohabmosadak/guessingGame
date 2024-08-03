@@ -18,31 +18,6 @@ const stopFunc = function (status) {
   document.querySelector(".guess").disabled = status;
   document.querySelector(".check").disabled = status;
 };
-// Event listeners to prevent right clicks
-document.querySelector("body").addEventListener("contextmenu", function (e) {
-  e.preventDefault();
-});
-// Event listeners to prevent f12 button
-document.addEventListener("keydown", function (e) {
-  if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-    e.preventDefault();
-  }
-});
-// Event to check if the developer tools are opened
-function detectDevTools() {
-  const threshold = 160;
-  const checkDevTools = () => {
-    const isDevToolsOpen =
-      window.outerWidth - window.innerWidth > threshold ||
-      window.outerHeight - window.innerHeight > threshold;
-    if (isDevToolsOpen) {
-      window.location.href =
-        "https://www.youtube.com/watch?v=qcOtg1L2Jc4&autoplay=1&mute=1&loop=1";
-    }
-  };
-  setInterval(checkDevTools, 1000);
-}
-detectDevTools();
 
 // Event Listener for the guess button click
 document.querySelector(".check").addEventListener("click", function () {
@@ -101,3 +76,30 @@ document.querySelector(".again").addEventListener("click", function () {
   document.querySelector(".guess").value = "";
   document.querySelector(".score").textContent = score;
 });
+
+// preventing the user from using devtools
+window.addEventListener("keydown", e =>
+  e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")
+    ? e.preventDefault()
+    : null
+);
+window.addEventListener("contextmenu", e => e.preventDefault());
+
+// Checking for devtools and taking action if detected
+let devtoolsOpen = false;
+const threshold = 160;
+
+setInterval(() => {
+  const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+  const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+  if (widthThreshold || heightThreshold) {
+    if (!devtoolsOpen) {
+      devtoolsOpen = true;
+      window.location.href =
+        "https://www.youtube.com/watch?v=qcOtg1L2Jc4&autoplay=1&mute=1&loop=1";
+    }
+  } else {
+    devtoolsOpen = false;
+  }
+}, 1000);
